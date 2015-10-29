@@ -1,0 +1,22 @@
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+
+class MY_Input extends CI_Input {
+
+	public function __construct() {
+        parent::__construct();
+    }
+
+    public function save_query($query_array) {
+    	$CI =& get_instance();
+        $CI->db->insert('ci_query', ['query_string' => http_build_query($query_array)]);
+        return $CI->db->insert_id();
+    }
+
+    public function load_query($query_id){
+    	$CI =& get_instance();
+    	$rows = $CI->db->get_where('ci_query', ['id' => $query_id])->result();
+    	if(isset($rows[0])){
+    		parse_str($rows[0]->query_string, $_GET);
+    	}
+    }
+}
